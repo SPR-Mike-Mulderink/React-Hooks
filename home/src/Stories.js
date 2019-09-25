@@ -20,6 +20,6 @@ function Stories() {
       };
     </div>
   );
-}
+};
 
 export default Stories;
