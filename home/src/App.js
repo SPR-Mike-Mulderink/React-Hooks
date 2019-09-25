@@ -3,6 +3,7 @@ import Joke from './Joke'
 import Stories from './Stories'
 
 function App() {
+
   const [userQuery, setUserQuery] = useState(''),
     updateUserQuery = event => {
       setUserQuery(event.target.value)
