@@ -1,13 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import uuid from 'uuid/v4';
+
+const TASK_STORAGE_KEY = 'TASK_STORAGE_KEY',
+  storeTasks = (taskMap) => {
+    localStorage.setItem(
+      TASK_STORAGE_KEY,
+      JSON.stringify({ taskMap })
+    )
+  },
+  readStoreTasks = () => {
+    const tasksMap = JSON.parse(localStorage.getItem(TASK_STORAGE_KEY));
+    return tasksMap ? tasksMap : { tasks: [], completedTasks: [] };
+  };
 
 function Tasks() {
   const [taskText, setTaskText] = useState(''),
-    [tasks, setTasks] = useState([]),
-    [completedTasks, setCompletedTasks] = useState([]),
-    updateTaskText = event => {
-      setTaskText(event.target.value);
-    },
+    storedTasks = readStoreTasks(),
+    [tasks, setTasks] = useState(storedTasks.taskMap.tasks),
+    [completedTasks, setCompletedTasks] = useState(storedTasks.taskMap.completedTasks);
+
+  useEffect(() => {
+    storeTasks({ tasks, completedTasks })
+  })
+
+  const updateTaskText = event => {
+    setTaskText(event.target.value);
+  },
     addTask = () => {
       setTasks([...tasks, { taskText, id: uuid() }]);
     },
@@ -17,10 +35,7 @@ function Tasks() {
     },
     deleteTask = task => () => {
       setCompletedTasks(completedTasks.filter(t => t.id !== task.id))
-    }
-
-  // console.log('tasks', tasks);
-  // console.log('completedTasks', completedTasks);
+    };
 
   return (
     <div>
@@ -33,7 +48,6 @@ function Tasks() {
         {
           tasks.map(task => {
             const { id, taskText } = task;
-
             return (
               <div key={id} onClick={completeTask(task)}>
                 {taskText}
@@ -45,9 +59,7 @@ function Tasks() {
       <div className='completed-list'>
         {
           completedTasks.map(task => {
-            console.log(task)
             const { id, taskText } = task;
-
             return (
               <div key={id}>
                 {taskText}{' '}
