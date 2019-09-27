@@ -17,7 +17,7 @@ function Stories() {
             </div>
           );
         })
-      };
+      }
     </div>
   );
 };
