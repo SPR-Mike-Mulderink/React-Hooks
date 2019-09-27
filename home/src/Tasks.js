@@ -1,47 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import uuid from 'uuid/v4';
 
-const TASK_STORAGE_KEY = 'TASK_STORAGE_KEY',
-  storeTasks = (taskMap) => {
-    localStorage.setItem(
-      TASK_STORAGE_KEY,
-      JSON.stringify({ taskMap })
-    )
-  },
-  readStoreTasks = () => {
-    const tasksMap = JSON.parse(localStorage.getItem(TASK_STORAGE_KEY));
-    return tasksMap ? tasksMap : { tasks: [], completedTasks: [] };
-  };
+const TASK_STORAGE_KEY = 'TASK_STORAGE_KEY';
+const storeTasks = (taskMap) => {
+  localStorage.setItem(
+    TASK_STORAGE_KEY,
+    JSON.stringify({ taskMap })
+  );
+};
+const readStoreTasks = () => {
+  const tasksMap = JSON.parse(localStorage.getItem(TASK_STORAGE_KEY));
+  return tasksMap ? tasksMap : { tasks: [], completedTasks: [] };
+};
 
 function Tasks() {
-  const [taskText, setTaskText] = useState(''),
-    storedTasks = readStoreTasks(),
-    [tasks, setTasks] = useState(storedTasks.taskMap.tasks),
-    [completedTasks, setCompletedTasks] = useState(storedTasks.taskMap.completedTasks);
+  const [taskText, setTaskText] = useState('');
+  const storedTasks = readStoreTasks();
+  const [tasks, setTasks] = useState(storedTasks.taskMap.tasks);
+  const [completedTasks, setCompletedTasks] = useState(storedTasks.taskMap.completedTasks);
 
   useEffect(() => {
     storeTasks({ tasks, completedTasks })
-  })
-
+  });
   const updateTaskText = event => {
     setTaskText(event.target.value);
-  },
-    addTask = () => {
-      setTasks([...tasks, { taskText, id: uuid() }]);
-    },
-    completeTask = completedTask => () => {
-      setCompletedTasks([...completedTasks, completedTask])
-      setTasks(tasks.filter(task => task.id !== completedTask.id));
-    },
-    deleteTask = task => () => {
-      setCompletedTasks(completedTasks.filter(t => t.id !== task.id))
-    };
+  };
+  const addTask = () => {
+    setTasks([...tasks, { taskText, id: uuid() }]);
+  };
+  const completeTask = completedTask => () => {
+    setCompletedTasks([...completedTasks, completedTask]);
+    setTasks(tasks.filter(task => task.id !== completedTask.id));
+  };
+  const deleteTask = task => () => {
+    setCompletedTasks(completedTasks.filter(t => t.id !== task.id));
+  };
 
   return (
     <div>
       <h3>Tasks</h3>
       <div className='form'>
-        <input value={taskText} onChange={updateTaskText}  />
+        <input value={taskText} onChange={updateTaskText} />
         <button onClick={addTask}>Add Task</button>
       </div>
       <div className='task-list'>
@@ -70,7 +69,7 @@ function Tasks() {
         }
       </div>
     </div>
-  )
+  );
 };
 
 export default Tasks;
