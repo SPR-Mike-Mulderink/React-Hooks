@@ -2,21 +2,26 @@ import React, { useState } from 'react';
 import Joke from './Joke'
 import Stories from './Stories'
 import Tasks from './Tasks'
+import Gallery from './Gallery'
 
 function App() {
+  const [userQuery, setUserQuery] = useState('');
+  const [showGallery, setShowGallery] = useState(true)
 
-  const [userQuery, setUserQuery] = useState(''),
-    updateUserQuery = event => {
-      setUserQuery(event.target.value)
-    },
-    searchQuery = event => {
+  const updateUserQuery = event => {
+    setUserQuery(event.target.value);
+  };
+  const searchQuery = event => {
+    window.open(`https://www.google.com/search?q=${userQuery}&tbm=isch`, `_blank`);
+  };
+  const handleKeyPress = event => {
+    if (event.key === 'Enter') {
       window.open(`https://www.google.com/search?q=${userQuery}&tbm=isch`, `_blank`);
-    },
-    handleKeyPress = event => {
-      if (event.key === 'Enter') {
-        window.open(`https://www.google.com/search?q=${userQuery}&tbm=isch`, `_blank`);
-      };
     };
+  };
+  const toggleShowGallery = () => {
+    setShowGallery(!showGallery)
+  }
 
   return (
     <div className="App">
@@ -29,6 +34,13 @@ function App() {
       <Joke />
       <hr />
       <Tasks />
+      <hr />
+      <div>
+        {showGallery ? <Gallery /> : null}
+        <button onClick={toggleShowGallery}>
+          {showGallery ? 'Hide' : 'Show'} Gallery
+        </button>
+      </div>
       <hr />
       <Stories />
     </div>
